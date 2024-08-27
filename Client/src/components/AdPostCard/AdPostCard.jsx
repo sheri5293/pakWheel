@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Typography, Grid, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import BlueHighlight from "../Common/BlueHighlight";
 import CheckIcon from "../Common/CheckIcon";
 import StyledButton from "../Common/StyledButton";
@@ -10,6 +11,12 @@ import { Wrapper, ContentBox, ImageContainerWrapper } from "./AdPostCardStyles";
 
 const AdPostCard = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    const authToken = Cookies.get("authToken");
+    if (!authToken) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleButtonClick = () => {
     navigate("/post-ad");

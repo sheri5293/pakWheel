@@ -14,9 +14,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const signup = async (req, res) => {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password, confirmPassword, username, phoneNO, location } =
+    req.body;
 
-  if (!email || !password || !confirmPassword) {
+  if (
+    !email ||
+    !password ||
+    !confirmPassword ||
+    !username ||
+    !phoneNO ||
+    !location
+  ) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -32,6 +40,9 @@ const signup = async (req, res) => {
           email,
           password: hashedPassword,
           confirmPassword: hashedPassword,
+          username,
+          phoneNO,
+          location,
         },
         (err, result) => {
           if (err) return res.status(500).json({ message: "Database error" });

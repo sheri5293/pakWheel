@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useFormLogin } from "../../hooks/useFormLogin";
 import ToastNotification from "../Common/ToastNotification";
-
 import Spinner from "../Common/Spinner";
 import {
   AuthContainer,
@@ -20,14 +18,13 @@ import {
   PasswordContainer,
   EyeIcon,
   GoogleButton,
-} from "./Authstyles";
+} from "./AuthStyles";
 import { Visibility, VisibilityOff, Google } from "@mui/icons-material";
 import useAuth from "../../services/authService";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { loginWithRedirect } = useAuth0();
-
+  // const { loginWithRedirect } = useAuth0();
   const { login } = useAuth();
   const { values, handleChange, handleSubmit, errors } = useFormLogin();
   const [loading, setLoading] = useState(false);
@@ -62,6 +59,9 @@ function LoginPage() {
                 setLoading(true);
                 try {
                   await login(values);
+                  Cookies.set("authToken", "yourToken", {
+                    expires: 1,
+                  });
                   toast.success("Login successful! Redirecting...");
                   setTimeout(() => {
                     navigate("/about");
@@ -108,24 +108,23 @@ function LoginPage() {
                 </EyeIcon>
               </PasswordContainer>
             )}
-            <StyledButton type="submit" variant="contained" color="primary">
+            <StyledButton type="submit" variant="contained" fullWidth>
               Login
             </StyledButton>
-            <Separator>
-              <span>Or</span>
-            </Separator>
-            <GoogleButton
-              onClick={() => loginWithRedirect({ connection: "google-oauth2" })}
-            >
-              <Google /> Sign in with Google
-            </GoogleButton>
-            <CreateAccountButton onClick={handleCreateAccountClick}>
-              Create Account
-            </CreateAccountButton>
           </form>
+          <Separator>or</Separator>
+          <GoogleButton variant="outlined" fullWidth startIcon={<Google />}>
+            Login with Google
+          </GoogleButton>
+          <CreateAccountButton
+            onClick={handleCreateAccountClick}
+            disabled={creatingAccount}
+          >
+            Create an Account
+          </CreateAccountButton>
         </FormWrapper>
-        <ToastNotification />
       </AuthContainer>
+      <ToastNotification />
     </>
   );
 }

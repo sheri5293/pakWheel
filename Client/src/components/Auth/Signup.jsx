@@ -15,7 +15,7 @@ import {
   Subtitle,
   PasswordContainer,
   EyeIcon,
-} from "./Authstyles";
+} from "./AuthStyles";
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -52,6 +52,39 @@ function SignupPage() {
         <Title>Sign Up</Title>
         <Subtitle>Create a new account.</Subtitle>
         <form onSubmit={(e) => handleSubmit(e, onSubmit)}>
+          <StyledTextField
+            label="Name"
+            name="username"
+            type="text"
+            value={values.username}
+            onChange={handleChange}
+            fullWidth
+            required
+            error={!!errors.username}
+            helperText={errors.username}
+          />
+          <StyledTextField
+            label="Phone Number"
+            name="phoneNO"
+            type="text"
+            value={values.phoneNO}
+            onChange={handleChange}
+            fullWidth
+            required
+            error={!!errors.phoneNO}
+            helperText={errors.phoneNO}
+          />
+          <StyledTextField
+            label="Location"
+            name="location"
+            type="text"
+            value={values.location}
+            onChange={handleChange}
+            fullWidth
+            required
+            error={!!errors.location}
+            helperText={errors.location}
+          />
           <StyledTextField
             label="Email"
             name="email"

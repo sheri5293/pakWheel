@@ -9,13 +9,20 @@ class User {
     });
   }
 
-  static create({ email, password, confirmPassword }, callback) {
+  static create(
+    { email, password, confirmPassword, username, phoneNO, location },
+    callback
+  ) {
     const sql =
-      "INSERT INTO users (email, password, confirmPassword) VALUES (?, ?, ?)";
-    db.query(sql, [email, password, confirmPassword], (err, results) => {
-      if (err) return callback(err);
-      callback(null, results);
-    });
+      "INSERT INTO users (email, password, confirmPassword, username, phoneNO, location) VALUES (?, ?, ?,?, ?, ?)";
+    db.query(
+      sql,
+      [email, password, confirmPassword, username, phoneNO, location],
+      (err, results) => {
+        if (err) return callback(err);
+        callback(null, results);
+      }
+    );
   }
 
   static findById(id, callback) {

@@ -37,7 +37,7 @@ function Navbar() {
   useEffect(() => {
     const authToken = Cookies.get("authToken");
     setIsLoggedIn(!!authToken);
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
