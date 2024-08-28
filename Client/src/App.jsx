@@ -13,6 +13,7 @@ import AdPostCard from "./components/post-ad/PostAd";
 import axios from "./services/api";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import ExploreCars from "./components/exploreCars/exploreCars";
 
 function App() {
   const [isTokenValid, setIsTokenValid] = useState(true);
@@ -50,6 +51,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/post-ad" element={<AdPostCard />} />
+        <Route path="/explore-cars" element={<ExploreCars />} />
       </Routes>
       <ToastContainer />
     </Router>

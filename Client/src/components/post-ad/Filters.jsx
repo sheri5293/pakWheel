@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -72,13 +73,7 @@ const FilterHeader = styled(Typography)`
   gap: 8px;
 `;
 
-const IconWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-function Filters() {
+const Filters = ({ setFilters }) => {
   const [location, setLocation] = useState("");
   const [fuel, setFuel] = useState("");
   const [transmission, setTransmission] = useState("");
@@ -106,6 +101,7 @@ function Filters() {
       engine,
       title,
     };
+    setFilters(filters);
     dispatch(fetchCars(filters));
   };
 
@@ -217,6 +213,6 @@ function Filters() {
       </StyledButton>
     </FilterContainer>
   );
-}
+};
 
 export default Filters;

@@ -2,17 +2,27 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCars } from "../../redux/slices/carSlice";
-import { Box, Card, CardMedia, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import styled from "styled-components";
 
 const CarGrid = styled(Box)`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  padding: 20px;
 `;
 
 const CarCard = styled(Card)`
   width: calc(33.333% - 20px);
+  display: flex;
+  flex-direction: column;
 `;
 
 const NoResults = styled(Typography)`
@@ -22,7 +32,14 @@ const NoResults = styled(Typography)`
   margin-top: 20px;
 `;
 
-function CarListing() {
+const ErrorText = styled(Typography)`
+  font-size: 1.2rem;
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+`;
+
+const CarListing = () => {
   const dispatch = useDispatch();
   const { cars, status, error } = useSelector((state) => state.cars);
 
@@ -33,8 +50,8 @@ function CarListing() {
   return (
     <>
       <CarGrid>
-        {status === "loading" && <p>Loading...</p>}
-        {status === "failed" && <p>Error loading cars.</p>}
+        {status === "loading" && <CircularProgress />}
+        {status === "failed" && <ErrorText>{error.message}</ErrorText>}
         {status === "succeeded" && cars.length > 0 ? (
           cars.map((car) => (
             <CarCard key={car._id}>
@@ -57,12 +74,12 @@ function CarListing() {
               </CardContent>
             </CarCard>
           ))
-        ) : (
+        ) : status === "succeeded" && cars.length === 0 ? (
           <NoResults></NoResults>
-        )}
+        ) : null}
       </CarGrid>
     </>
   );
-}
+};
 
 export default CarListing;

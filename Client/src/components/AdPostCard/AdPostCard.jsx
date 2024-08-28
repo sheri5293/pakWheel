@@ -7,10 +7,16 @@ import BlueHighlight from "../Common/BlueHighlight";
 import CheckIcon from "../Common/CheckIcon";
 import StyledButton from "../Common/StyledButton";
 import ImageContainer from "./ImageContainer";
-import { Wrapper, ContentBox, ImageContainerWrapper } from "./AdPostCardStyles";
+import {
+  Wrapper,
+  Heading,
+  ContentBox,
+  ImageContainerWrapper,
+} from "./AdPostCardStyles";
 
 const AdPostCard = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const authToken = Cookies.get("authToken");
     if (!authToken) {
@@ -18,30 +24,30 @@ const AdPostCard = () => {
     }
   }, [navigate]);
 
-  const handleButtonClick = () => {
-    navigate("/post-ad");
+  const handleButtonClick = (path) => {
+    navigate(path);
   };
 
   return (
     <Wrapper>
       <Container>
-        <Typography variant="h4" gutterBottom sx={{ color: "#0d47a1" }}>
-          Sell Your Car Online in Pakistan
-        </Typography>
-        <ContentBox>
-          <Typography variant="h5" gutterBottom>
-            <BlueHighlight>Post</BlueHighlight> your Ad on PakWheels
-          </Typography>
-          <ImageContainerWrapper>
-            <ImageContainer src="image-source.png" alt="Car Image" />
-          </ImageContainerWrapper>
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid item xs={12}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <ContentBox>
+              <Heading variant="h4" gutterBottom>
+                Sell Your Car Online in Pakistan
+              </Heading>
+              <Typography variant="h5" gutterBottom>
+                <BlueHighlight>Post</BlueHighlight> your Ad on PakWheels
+              </Typography>
+              <ImageContainerWrapper>
+                <ImageContainer src="image-source.png" alt="Car Image" />
+              </ImageContainerWrapper>
               <Box
                 display="flex"
                 flexDirection="column"
                 alignItems="center"
-                sx={{ mb: 2 }}
+                sx={{ mt: 2 }}
               >
                 <Box
                   display="flex"
@@ -74,17 +80,76 @@ const AdPostCard = () => {
                   </Typography>
                 </Box>
               </Box>
-            </Grid>
+              <StyledButton
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, width: "100%" }}
+                onClick={() => handleButtonClick("/post-ad")}
+              >
+                Post An Ad
+              </StyledButton>
+            </ContentBox>
           </Grid>
-          <StyledButton
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, width: "100%", maxWidth: "300px", ml: "-10px" }}
-            onClick={handleButtonClick}
-          >
-            Post An Ad
-          </StyledButton>
-        </ContentBox>
+
+          <Grid item xs={12} md={6}>
+            <ContentBox>
+              <Heading variant="h4" gutterBottom>
+                Buy Your Dream Car Online in Pakistan
+              </Heading>
+              <Typography variant="h5" gutterBottom>
+                <BlueHighlight>Explore</BlueHighlight> Cars on PakWheels
+              </Typography>
+              <ImageContainerWrapper>
+                <ImageContainer src="image-source2.png" alt="Dream Car Image" />
+              </ImageContainerWrapper>
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                sx={{ mt: 2 }}
+              >
+                <Box
+                  display="flex"
+                  alignItems="flex-start"
+                  sx={{ mb: 1, maxWidth: "400px", width: "100%" }}
+                >
+                  <CheckIcon sx={{ fontSize: "1rem" }} />
+                  <Typography variant="body1" sx={{ ml: 1 }}>
+                    Explore a wide range of cars
+                  </Typography>
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="flex-start"
+                  sx={{ mb: 1, maxWidth: "400px", width: "100%" }}
+                >
+                  <CheckIcon sx={{ fontSize: "1rem" }} />
+                  <Typography variant="body1" sx={{ ml: 1 }}>
+                    Verified sellers and buyers
+                  </Typography>
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="flex-start"
+                  sx={{ maxWidth: "400px", width: "100%" }}
+                >
+                  <CheckIcon sx={{ fontSize: "1rem" }} />
+                  <Typography variant="body1" sx={{ ml: 1 }}>
+                    Get the best deals in the market
+                  </Typography>
+                </Box>
+              </Box>
+              <StyledButton
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, width: "100%" }}
+                onClick={() => handleButtonClick("/explore-cars")}
+              >
+                Explore Cars
+              </StyledButton>
+            </ContentBox>
+          </Grid>
+        </Grid>
       </Container>
     </Wrapper>
   );

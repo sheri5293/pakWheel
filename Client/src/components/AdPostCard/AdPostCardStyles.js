@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 export const Wrapper = styled(Box)`
   background-color: black;
-  padding: 60px 20px;
+  padding: 80px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +31,7 @@ export const ContentBox = styled(Box)`
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   max-width: 450px;
   text-align: center;
-  margin: 0 auto;
+  margin: 20px auto;
 
   @media (max-width: 600px) {
     padding: 20px 15px;
