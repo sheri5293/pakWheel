@@ -151,7 +151,7 @@ const PostAd = () => {
           open={modalOpen}
           handleClose={handleCloseModal}
           onSuccess={() => handleSuccess("photos")}
-          carId={carId || "51"}
+          carId={carId || "84"}
         />
       )}
       {modalOpen && activeCard === "contact" && (
@@ -159,7 +159,7 @@ const PostAd = () => {
           open={modalOpen}
           handleClose={handleCloseModal}
           onSuccess={() => handleSuccess("contact")}
-          carId={carId || "51"}
+          carId={carId || "84"}
         />
       )}
 

@@ -13,6 +13,8 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -50,6 +52,11 @@ const CitySelect = styled(Select)(({ theme }) => ({
   marginBottom: "16px",
 }));
 
+const FeaturesSelect = styled(Select)(({ theme }) => ({
+  width: "100%",
+  marginBottom: "16px",
+}));
+
 const StyledButton = styled(Button)(({ theme }) => ({
   backgroundColor: "#007bff",
   color: "#fff",
@@ -60,6 +67,34 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const featuresList = [
+  "ABS",
+  "AM/FM Radio",
+  "Air Bags",
+  "Air Conditioning",
+  "Alloy Rims",
+  "Climate Control",
+  "CoolBox",
+  "Cruise Control",
+  "DVD Player",
+  "Front Camera",
+  "Front Speakers",
+  "Immobilizer Key",
+  "Keyless Entry",
+  "Navigation System",
+  "Power Locks",
+  "Power Mirrors",
+  "Power Steering",
+  "Power Windows",
+  "Rear AC Vents",
+  "Rear Camera",
+  "Rear Seat Entertainment",
+  "Rear Speakers",
+  "Steering Switches",
+  "Sun Roof",
+  "USB and Auxillary Cable",
+];
+
 const CarInfoModal = ({ open, handleClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     city: "",
@@ -69,6 +104,15 @@ const CarInfoModal = ({ open, handleClose, onSuccess }) => {
     mileage: "",
     price: "",
     description: "",
+    title: "",
+    location: "",
+    Category: "",
+    FuelType: "",
+    Assembly: "",
+    EngineCapacity: "",
+    BodyType: "",
+    LastUpdate: "",
+    features: [],
   });
 
   useEffect(() => {
@@ -81,6 +125,15 @@ const CarInfoModal = ({ open, handleClose, onSuccess }) => {
         mileage: "",
         price: "",
         description: "",
+        title: "",
+        location: "",
+        Category: "",
+        FuelType: "",
+        Assembly: "",
+        EngineCapacity: "",
+        BodyType: "",
+        LastUpdate: "",
+        features: [],
       });
     }
   }, [open]);
@@ -90,21 +143,31 @@ const CarInfoModal = ({ open, handleClose, onSuccess }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFeaturesChange = (event) => {
+    const { value } = event.target;
+    setFormData({ ...formData, features: value });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const currentDate = new Date().toISOString();
+    const updatedFormData = { ...formData, LastUpdate: currentDate };
+
     const token = Cookies.get("token");
+    console.log("Token from cookies:", token);
 
     try {
       const response = await axios.post(
         "http://localhost:5000/api/users/submit-car-info",
-        formData,
+        updatedFormData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      console.log("Response:", response);
       if (response.status === 201) {
         alert("Car information submitted successfully");
         handleClose();
@@ -215,6 +278,86 @@ const CarInfoModal = ({ open, handleClose, onSuccess }) => {
             rows={4}
             required
           />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="title"
+            label="Title"
+            value={formData.title}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="location"
+            label="Location"
+            value={formData.location}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="Category"
+            label="Category"
+            value={formData.Category}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="FuelType"
+            label="Fuel Type"
+            value={formData.FuelType}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="Assembly"
+            label="Assembly"
+            value={formData.Assembly}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="EngineCapacity"
+            label="Engine Capacity"
+            value={formData.EngineCapacity}
+            onChange={handleChange}
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            name="BodyType"
+            label="Body Type"
+            value={formData.BodyType}
+            onChange={handleChange}
+          />
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Features</InputLabel>
+            <FeaturesSelect
+              name="features"
+              multiple
+              value={formData.features}
+              onChange={handleFeaturesChange}
+              renderValue={(selected) => (
+                <div>
+                  {selected.map((feature) => (
+                    <span key={feature}>{feature}</span>
+                  ))}
+                </div>
+              )}
+              inputProps={{ "aria-label": "Features" }}
+            >
+              {featuresList.map((feature) => (
+                <MenuItem key={feature} value={feature}>
+                  <Checkbox checked={formData.features.indexOf(feature) > -1} />
+                  <ListItemText primary={feature} />
+                </MenuItem>
+              ))}
+            </FeaturesSelect>
+          </FormControl>
           <StyledButton type="submit">Submit</StyledButton>
         </form>
       </ModalWrapper>

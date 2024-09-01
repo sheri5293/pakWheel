@@ -36,13 +36,53 @@ class User {
 
 const Car = {
   create: (carData, callback) => {
-    const { city, carInfo, registeredIn, color, mileage, price, description } =
-      carData;
-    const query =
-      "INSERT INTO car_info (city, carInfo, registeredIn, color, mileage, price, description) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const {
+      city,
+      carInfo,
+      registeredIn,
+      color,
+      mileage,
+      price,
+      description,
+      title,
+      location,
+      Category,
+      FuelType,
+      Assembly,
+      EngineCapacity,
+      BodyType,
+      LastUpdate,
+      features,
+    } = carData;
+
+    const query = `
+      INSERT INTO car_info (
+        city, carInfo, registeredIn, color, mileage, price, description,
+        title, location, Category, FuelType, Assembly, EngineCapacity,
+        BodyType, LastUpdate, features
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
     db.query(
       query,
-      [city, carInfo, registeredIn, color, mileage, price, description],
+      [
+        city,
+        carInfo,
+        registeredIn,
+        color,
+        mileage,
+        price,
+        description,
+        title,
+        location,
+        Category,
+        FuelType,
+        Assembly,
+        EngineCapacity,
+        BodyType,
+        LastUpdate,
+        JSON.stringify(features),
+      ],
       (err, result) => {
         if (err) {
           console.error("Error executing query:", err);

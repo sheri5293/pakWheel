@@ -1,482 +1,436 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Grid,
-  Button,
-  styled,
   Box,
-  Container,
-  Modal,
-  TextField,
-  IconButton,
-  AppBar,
-  Toolbar,
+  Typography,
+  Card,
+  CardMedia,
+  Button,
+  Divider,
+  Grid,
 } from "@mui/material";
-import CarListing from "../post-ad/CarListing";
-import Filters from "../post-ad/Filters";
-import { Provider } from "react-redux";
-import store from "../../redux/store";
+import { styled } from "@mui/system";
+import Slider from "react-slick";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import SpeedIcon from "@mui/icons-material/Speed";
+import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
+import SettingsIcon from "@mui/icons-material/Settings";
+import RadioIcon from "@mui/icons-material/Radio";
+import AirIcon from "@mui/icons-material/Air";
+import AcUnitIcon from "@mui/icons-material/AcUnit";
+import LockIcon from "@mui/icons-material/Lock";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import WindowIcon from "@mui/icons-material/Window";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+const CarCard = styled(Card)`
+  max-width: 900px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+`;
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  width: "100%",
-  maxWidth: "800px",
-  marginBottom: theme.spacing(3),
-  boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
-  borderRadius: "12px",
-  position: "relative",
-  overflow: "hidden",
-  transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-  "&:hover": {
-    transform: "scale(1.05)",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
-  },
-}));
+const HeaderSection = styled(Box)`
+  padding: 16px;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
 
-const Sidebar = styled(Box)(({ theme }) => ({
-  width: "250px",
-  backgroundColor: theme.palette.grey[200],
-  padding: theme.spacing(2),
-  height: "100vh",
-  boxShadow: "2px 0 5px rgba(0, 0, 0, 0.1)",
-  borderRadius: "8px",
-}));
+const LocationBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  color: #1976d2;
+  margin-top: 8px;
+  font-size: 14px;
+`;
 
-const FeaturedBadge = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  top: 16,
-  left: 16,
-  backgroundColor: theme.palette.error.main,
-  color: "#fff",
-  padding: "4px 12px",
-  fontSize: "14px",
-  fontWeight: "bold",
-  borderRadius: "20px",
-}));
+const CarImageSlider = styled(Slider)`
+  .slick-slide img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+`;
 
-const DetailsContainer = styled(Box)({
-  display: "flex",
-  flexDirection: "column",
-  padding: "16px",
-  height: "100%",
-  justifyContent: "space-between",
-});
+const InfoSection = styled(Box)`
+  padding: 16px;
+`;
 
-const PhoneButton = styled(Button)({
-  backgroundColor: "#28a745",
-  color: "#fff",
-  marginTop: "10px",
-  borderRadius: "20px",
-  textTransform: "none",
-  padding: "8px 24px",
-  "&:hover": {
-    backgroundColor: "#218838",
-  },
-});
+const DetailRow = styled(Box)`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #333;
+`;
 
-const PriceTag = styled(Typography)({
-  fontWeight: "bold",
-  color: "#28a745",
-});
+const DetailIcon = styled(Box)`
+  margin-right: 8px;
+  color: #1976d2;
+`;
 
-const DescriptionText = styled(Typography)(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  color: theme.palette.text.secondary,
-}));
+const DetailItem = styled(Box)`
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+`;
 
-const EditDeleteContainer = styled(Box)({
-  position: "absolute",
-  top: 10,
-  right: 10,
-  display: "flex",
-  gap: "8px",
-});
+const AdditionalDetails = styled(Box)`
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  margin-top: 16px;
+  border: 1px solid #ddd;
+`;
 
-const ModalHeader = styled(AppBar)(({ theme }) => ({
-  position: "static",
-  backgroundColor: theme.palette.background.paper,
-  boxShadow: "none",
-  borderBottom: `1px solid ${theme.palette.divider}`,
-}));
+const AdditionalDetailsGrid = styled(Box)`
+  display: grid;
+  grid-template-columns: 150px auto;
+  row-gap: 12px;
+  column-gap: 16px;
+  align-items: center;
+`;
 
-const ModalBody = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  maxHeight: "70vh",
-  overflowY: "auto",
-}));
+const FeatureHeading = styled(Typography)`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  color: #333;
+  text-align: center;
+`;
 
-const carAds = [
-  {
-    id: 1,
-    featured: true,
-    image:
-      "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
-    city: "Karachi",
-    carInfo: "Daihatsu Mira",
-    mileage: "7,000 km",
-    registeredIn: "Punjab",
-    color: "Silver",
-    price: "360,000 PKR",
-    description: "Good condition, first owner",
-    phoneNumber: "+92 300 0000000",
-  },
-  {
-    id: 2,
-    featured: true,
-    image:
-      "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
-    city: "Karachi",
-    carInfo: "Suzuki Alto",
-    mileage: "12,000 km",
-    registeredIn: "Sindh",
-    color: "White",
-    price: "1,200,000 PKR",
-    description: "Low mileage, very neat and clean",
-    phoneNumber: "+92 300 0000000",
-  },
-  {
-    id: 3,
-    featured: false,
-    image:
-      "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
-    city: "Lahore",
-    carInfo: "Honda Civic",
-    mileage: "45,000 km",
-    registeredIn: "Punjab",
-    color: "Black",
-    price: "2,400,000 PKR",
-    description: "Well maintained, used by an army officer",
-    phoneNumber: "+92 300 0000000",
-  },
-  {
-    id: 4,
-    featured: false,
-    image:
-      "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
-    city: "Lahore",
-    carInfo: "Honda Civic",
-    mileage: "45,000 km",
-    registeredIn: "Punjab",
-    color: "Black",
-    price: "2,400,000 PKR",
-    description: "Well maintained, used by an army officer",
-    phoneNumber: "+92 300 0000000",
-  },
-  {
-    id: 5,
-    featured: false,
-    image:
-      "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
-    city: "Lahore",
-    carInfo: "Honda Civic",
-    mileage: "45,000 km",
-    registeredIn: "Punjab",
-    color: "Black",
-    price: "2,400,000 PKR",
-    description: "Well maintained, used by an army officer",
-    phoneNumber: "+92 300 0000000",
-  },
-];
+const ContactButton = styled(Button)`
+  background-color: #4caf50;
+  color: white;
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const PriceCard = styled(Card)`
+  max-width: 300px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const CarDetailsContainer = styled(Box)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0;
+`;
+
+const CarInfoBox = styled(Box)`
+  flex: 0 0 48%;
+  margin-bottom: 20px;
+`;
+
+const InfoRow = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+`;
+
+const FeaturesSection = styled(Box)`
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+`;
+
+const FeatureItem = styled(Box)`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 12px;
+`;
+
+const FeatureIcon = styled(Box)`
+  margin-right: 12px;
+  color: #000;
+  font-size: 20px;
+`;
+
+const DescriptionSection = styled(Box)`
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-top: 16px;
+`;
+
+const DescriptionHeading = styled(Typography)`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+`;
+
+const DescriptionText = styled(Typography)`
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+`;
+
+const PhoneNumberSection = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const PhoneButton = styled(Button)`
+  background-color: #1976d2;
+  color: white;
+  margin-top: 8px;
+  &:hover {
+    background-color: #1565c0;
+  }
+`;
+
+const SellerCard = styled(Card)`
+  max-width: 300px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const SellerIconBox = styled(Box)`
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+
+  & > * {
+    color: #1976d2;
+    font-size: 28px;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #004ba0;
+    }
+  }
+`;
 
 const PublishedAdLayout = () => {
-  const [visiblePhoneNumber, setVisiblePhoneNumber] = useState(null);
-  const [editAd, setEditAd] = useState(null);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [carList, setCarList] = useState(carAds);
+  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
 
-  const handleShowPhone = (id) => {
-    setVisiblePhoneNumber(visiblePhoneNumber === id ? null : id);
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
 
-  const handleEditClick = (ad) => {
-    setEditAd(ad);
-    setOpenEditModal(true);
+  const featureIcons = {
+    "AM/FM Radio": <RadioIcon />,
+    "Air Bags": <AirIcon />,
+    "Air Conditioning": <AcUnitIcon />,
+    "Leather Seats": <LockIcon />,
+    "Power Door Locks": <LockIcon />,
+    "Power Mirrors": <VisibilityIcon />,
+    "Power Windows": <WindowIcon />,
+    ABS: <RadioIcon />,
+    Sunroof: <Brightness7Icon />,
   };
-
-  const handleDeleteClick = (id) => {
-    setCarList(carList.filter((ad) => ad.id !== id));
-  };
-
-  const handleCloseModal = () => {
-    setOpenEditModal(false);
-    setEditAd(null);
-  };
-
-  const handleEditSubmit = (values) => {
-    setCarList(
-      carList.map((ad) => (ad.id === editAd.id ? { ...ad, ...values } : ad))
-    );
-    handleCloseModal();
-  };
-
-  const formik = useFormik({
-    initialValues: {
-      image: editAd?.image || "",
-      city: editAd?.city || "",
-      carInfo: editAd?.carInfo || "",
-      mileage: editAd?.mileage || "",
-      registeredIn: editAd?.registeredIn || "",
-      color: editAd?.color || "",
-      price: editAd?.price || "",
-      description: editAd?.description || "",
-      phoneNumber: editAd?.phoneNumber || "",
-    },
-    enableReinitialize: true,
-    validationSchema: Yup.object({
-      image: Yup.string().url("Invalid URL").required("Required"),
-      city: Yup.string().required("Required"),
-      carInfo: Yup.string().required("Required"),
-      mileage: Yup.string().required("Required"),
-      registeredIn: Yup.string().required("Required"),
-      color: Yup.string().required("Required"),
-      price: Yup.string().required("Required"),
-      description: Yup.string().required("Required"),
-      phoneNumber: Yup.string().required("Required"),
-    }),
-    onSubmit: handleEditSubmit,
-  });
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
-          <Typography variant="h6" gutterBottom>
-            <Provider store={store}>
-              <Filters />
-              <CarListing />
-            </Provider>
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={9}>
-          <Grid container spacing={3}>
-            {carList.map((ad) => (
-              <Grid item key={ad.id} xs={12}>
-                <StyledCard>
-                  {ad.featured && <FeaturedBadge>FEATURED</FeaturedBadge>}
-                  <CardMedia
-                    component="img"
-                    sx={{ height: 300, objectFit: "cover" }}
-                    image={ad.image}
-                    alt={ad.carInfo}
-                  />
-                  <CardContent>
-                    <EditDeleteContainer>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEditClick(ad)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick(ad.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </EditDeleteContainer>
-                    <DetailsContainer>
-                      <Typography
-                        component="h5"
-                        variant="h6"
-                        sx={{ fontWeight: 600, fontSize: "1.5rem" }}
-                      >
-                        {ad.carInfo}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{ marginBottom: "8px" }}
-                      >
-                        {ad.city} | {ad.carInfo} | {ad.registeredIn} |{" "}
-                        {ad.mileage} | {ad.color}
-                      </Typography>
-                      <PriceTag variant="h6">{ad.price}</PriceTag>
-                      <DescriptionText variant="body2">
-                        {ad.description}
-                      </DescriptionText>
-                      <PhoneButton
-                        variant="contained"
-                        onClick={() => handleShowPhone(ad.id)}
-                      >
-                        {visiblePhoneNumber === ad.id
-                          ? ad.phoneNumber
-                          : "Show Phone No."}
-                      </PhoneButton>
-                    </DetailsContainer>
-                  </CardContent>
-                </StyledCard>
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Modal
-        open={openEditModal}
-        onClose={handleCloseModal}
-        aria-labelledby="edit-modal-title"
-        aria-describedby="edit-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "90%",
-            maxWidth: "600px",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            borderRadius: "8px",
-          }}
-        >
-          <ModalHeader>
-            <Toolbar>
-              <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                Edit Ad
+    <Grid container spacing={2}>
+      <Grid item xs={8}>
+        <CarCard>
+          <HeaderSection>
+            <Typography variant="h5">Toyota Land Cruiser ZX 2016</Typography>
+            <LocationBox>
+              <LocationOnIcon fontSize="small" />
+              <Typography variant="body2" sx={{ marginLeft: "4px" }}>
+                Bath Island, Karachi Sindh
               </Typography>
-              <Button color="inherit" onClick={handleCloseModal}>
-                Close
-              </Button>
-            </Toolbar>
-          </ModalHeader>
-          <ModalBody>
-            <form onSubmit={formik.handleSubmit}>
-              <TextField
-                fullWidth
-                margin="normal"
-                id="image"
-                name="image"
-                label="Image URL"
-                value={formik.values.image}
-                onChange={formik.handleChange}
-                error={formik.touched.image && Boolean(formik.errors.image)}
-                helperText={formik.touched.image && formik.errors.image}
+            </LocationBox>
+          </HeaderSection>
+          <CarImageSlider {...settings}>
+            <div>
+              <CardMedia
+                component="img"
+                image="src/assets/image/demo1.webp"
+                alt="Toyota Land Cruiser"
               />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="city"
-                name="city"
-                label="City"
-                value={formik.values.city}
-                onChange={formik.handleChange}
-                error={formik.touched.city && Boolean(formik.errors.city)}
-                helperText={formik.touched.city && formik.errors.city}
+            </div>
+            <div>
+              <CardMedia
+                component="img"
+                image="src/assets/image/demo2.webp"
+                alt="Toyota Land Cruiser"
               />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="carInfo"
-                name="carInfo"
-                label="Car Information"
-                value={formik.values.carInfo}
-                onChange={formik.handleChange}
-                error={formik.touched.carInfo && Boolean(formik.errors.carInfo)}
-                helperText={formik.touched.carInfo && formik.errors.carInfo}
+            </div>
+            <div>
+              <CardMedia
+                component="img"
+                image="src/assets/image/demo3.webp"
+                alt="Toyota Land Cruiser"
               />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="mileage"
-                name="mileage"
-                label="Mileage"
-                value={formik.values.mileage}
-                onChange={formik.handleChange}
-                error={formik.touched.mileage && Boolean(formik.errors.mileage)}
-                helperText={formik.touched.mileage && formik.errors.mileage}
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="registeredIn"
-                name="registeredIn"
-                label="Registered In"
-                value={formik.values.registeredIn}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.registeredIn &&
-                  Boolean(formik.errors.registeredIn)
-                }
-                helperText={
-                  formik.touched.registeredIn && formik.errors.registeredIn
-                }
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="color"
-                name="color"
-                label="Color"
-                value={formik.values.color}
-                onChange={formik.handleChange}
-                error={formik.touched.color && Boolean(formik.errors.color)}
-                helperText={formik.touched.color && formik.errors.color}
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="price"
-                name="price"
-                label="Price"
-                value={formik.values.price}
-                onChange={formik.handleChange}
-                error={formik.touched.price && Boolean(formik.errors.price)}
-                helperText={formik.touched.price && formik.errors.price}
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="description"
-                name="description"
-                label="Description"
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.description &&
-                  Boolean(formik.errors.description)
-                }
-                helperText={
-                  formik.touched.description && formik.errors.description
-                }
-              />
-              <TextField
-                fullWidth
-                margin="normal"
-                id="phoneNumber"
-                name="phoneNumber"
-                label="Phone Number"
-                value={formik.values.phoneNumber}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.phoneNumber &&
-                  Boolean(formik.errors.phoneNumber)
-                }
-                helperText={
-                  formik.touched.phoneNumber && formik.errors.phoneNumber
-                }
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                sx={{ marginTop: "16px" }}
-              >
-                Save Changes
-              </Button>
-            </form>
-          </ModalBody>
-        </Box>
-      </Modal>
-    </Container>
+            </div>
+          </CarImageSlider>
+          <InfoSection>
+            <Divider />
+            <Box display="flex" justifyContent="space-between" padding="8px 0">
+              <DetailItem>
+                <DetailIcon>
+                  <CalendarTodayIcon fontSize="small" />
+                </DetailIcon>
+                <Typography variant="body2">2016</Typography>
+              </DetailItem>
+              <DetailItem>
+                <DetailIcon>
+                  <SpeedIcon fontSize="small" />
+                </DetailIcon>
+                <Typography variant="body2">80,000 km</Typography>
+              </DetailItem>
+              <DetailItem>
+                <DetailIcon>
+                  <LocalGasStationIcon fontSize="small" />
+                </DetailIcon>
+                <Typography variant="body2">Petrol</Typography>
+              </DetailItem>
+              <DetailItem>
+                <DetailIcon>
+                  <SettingsIcon fontSize="small" />
+                </DetailIcon>
+                <Typography variant="body2">Automatic</Typography>
+              </DetailItem>
+            </Box>
+            <Divider />
+            <AdditionalDetails>
+              <CarDetailsContainer>
+                <CarInfoBox>
+                  <InfoRow>
+                    <Typography variant="body1" fontWeight="bold">
+                      Registered In:
+                    </Typography>
+                    <Typography variant="body1">Sindh</Typography>
+                  </InfoRow>
+                  <InfoRow>
+                    <Typography variant="body1" fontWeight="bold">
+                      Color:
+                    </Typography>
+                    <Typography variant="body1">Black</Typography>
+                  </InfoRow>
+                  <InfoRow>
+                    <Typography variant="body1" fontWeight="bold">
+                      Condition:
+                    </Typography>
+                    <Typography variant="body1">Used</Typography>
+                  </InfoRow>
+                </CarInfoBox>
+                <CarInfoBox>
+                  <InfoRow>
+                    <Typography variant="body1" fontWeight="bold">
+                      Transmission:
+                    </Typography>
+                    <Typography variant="body1">Automatic</Typography>
+                  </InfoRow>
+                  <InfoRow>
+                    <Typography variant="body1" fontWeight="bold">
+                      Fuel Type:
+                    </Typography>
+                    <Typography variant="body1">Petrol</Typography>
+                  </InfoRow>
+                  <InfoRow>
+                    <Typography variant="body1" fontWeight="bold">
+                      Engine Capacity:
+                    </Typography>
+                    <Typography variant="body1">4.0L</Typography>
+                  </InfoRow>
+                </CarInfoBox>
+              </CarDetailsContainer>
+            </AdditionalDetails>
+
+            <FeatureHeading>Car Features</FeatureHeading>
+            <FeaturesSection>
+              {Object.entries(featureIcons).map(([feature, icon]) => (
+                <FeatureItem key={feature}>
+                  <FeatureIcon>{icon}</FeatureIcon>
+                  <Typography variant="body2">{feature}</Typography>
+                </FeatureItem>
+              ))}
+            </FeaturesSection>
+            <DescriptionSection>
+              <DescriptionHeading>Seller's Comments</DescriptionHeading>
+              <DescriptionText>
+                This Toyota Land Cruiser ZX 2016 is in excellent condition with
+                all the features you need for a comfortable and luxurious ride.
+                It has been well-maintained and is ready for a new owner.
+              </DescriptionText>
+            </DescriptionSection>
+          </InfoSection>
+        </CarCard>
+      </Grid>
+      <Grid item xs={4}>
+        <PriceCard>
+          <Typography variant="h6" gutterBottom>
+            Price
+          </Typography>
+          <Typography variant="h5" color="primary">
+            $60,000
+          </Typography>
+          <PhoneNumberSection>
+            <ContactButton onClick={() => setShowPhoneNumber(!showPhoneNumber)}>
+              {showPhoneNumber ? "Hide Phone Number" : "Show Phone Number"}
+            </ContactButton>
+            {showPhoneNumber && (
+              <Typography variant="body1" sx={{ marginTop: "8px" }}>
+                Phone: +123 456 7890
+              </Typography>
+            )}
+          </PhoneNumberSection>
+        </PriceCard>
+
+        <SellerCard>
+          <Typography variant="h6">Seller Details</Typography>
+          <Typography variant="body1">Sheheryar</Typography>
+          <Typography variant="body2" color="textSecondary">
+            Member since Jan 2020
+          </Typography>
+          <SellerIconBox>
+            <FacebookIcon />
+            <EmailIcon />
+            <PhoneIcon />
+          </SellerIconBox>
+        </SellerCard>
+      </Grid>
+    </Grid>
   );
 };
 
