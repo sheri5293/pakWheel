@@ -17,12 +17,12 @@ import {
 const AdPostCard = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const authToken = Cookies.get("authToken");
-    if (!authToken) {
-      navigate("/login");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const authToken = Cookies.get("authToken");
+  //   if (!authToken) {
+  //     navigate("/login");
+  //   }
+  // }, [navigate]);
 
   const handleButtonClick = (path) => {
     navigate(path);

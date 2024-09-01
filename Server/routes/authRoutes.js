@@ -23,6 +23,11 @@ router.get("/google/callback", googleCallback);
 router.get("/services", authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
+
+router.get("/post-ad", authMiddleware, (req, res) => {
+  res.json({ message: "This is a protected route" });
+});
+
 router.post("/submit-car-info", submitCarInfo);
 router.post("/upload-images", upload.single("image"), uploadImage);
 
