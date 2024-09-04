@@ -10,6 +10,8 @@ import multer from "multer";
 import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
 import db from "../config/db.js";
+import Comment from "../models/Comment.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -279,7 +281,30 @@ const getCarDetail = async (req, res) => {
     res.status(500).json({ message: "Database error" });
   }
 };
+const getComments = (req, res) => {
+  Comment.getAllComments((err, results) => {
+    if (err) {
+      res.status(500).json({ error: "Database error" });
+    } else {
+      res.json(results);
+    }
+  });
+};
 
+const addComment = (req, res) => {
+  const newComment = {
+    text: req.body.text,
+    isUser: req.body.isUser,
+  };
+
+  Comment.addComment(newComment, (err, result) => {
+    if (err) {
+      res.status(500).json({ error: "Database error" });
+    } else {
+      res.status(201).json({ id: result.insertId, ...newComment });
+    }
+  });
+};
 export {
   login,
   signup,
@@ -290,4 +315,6 @@ export {
   upload,
   saveContact,
   getCarDetail,
+  getComments,
+  addComment,
 };

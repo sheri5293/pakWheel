@@ -1,6 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AuthContext from "../contexts/AuthContext";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -9,6 +11,7 @@ import {
   Button,
   Divider,
   Grid,
+  TextField,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import Slider from "react-slick";
@@ -69,18 +72,45 @@ const CarImageSlider = styled(Slider)`
     object-fit: cover;
     border-radius: 8px;
   }
+
+  .slick-prev,
+  .slick-next {
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+  }
+
+  .slick-prev {
+    left: 10px;
+    &:before {
+      content: "‹";
+      font-size: 24px;
+      color: #1976d2;
+    }
+  }
+
+  .slick-next {
+    right: 10px;
+    &:before {
+      content: "›";
+      font-size: 24px;
+      color: #1976d2;
+    }
+  }
+
+  .slick-prev:hover,
+  .slick-next:hover {
+    opacity: 1;
+  }
 `;
 
 const InfoSection = styled(Box)`
   padding: 16px;
-`;
-
-const DetailRow = styled(Box)`
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: #333;
 `;
 
 const DetailIcon = styled(Box)`
@@ -100,14 +130,6 @@ const AdditionalDetails = styled(Box)`
   border-radius: 12px;
   margin-top: 16px;
   border: 1px solid #ddd;
-`;
-
-const AdditionalDetailsGrid = styled(Box)`
-  display: grid;
-  grid-template-columns: 150px auto;
-  row-gap: 12px;
-  column-gap: 16px;
-  align-items: center;
 `;
 
 const FeatureHeading = styled(Typography)`
@@ -246,10 +268,98 @@ const SellerIconBox = styled(Box)`
     }
   }
 `;
+const CommentSection = styled(Box)`
+  margin-top: 16px;
+  padding: 24px;
+  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const CommentList = styled(Box)`
+  margin-bottom: 16px;
+`;
+
+const CommentItem = styled(Box)`
+  margin-bottom: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffffff, #f1f1f1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  max-width: 80%;
+  position: relative;
+
+  &.user-comment {
+    background: #007aff;
+    color: #fff;
+    align-self: flex-end;
+    border-top-right-radius: 0;
+  }
+
+  &.other-comment {
+    background: #e5e5ea;
+    color: #000;
+    align-self: flex-start;
+    border-top-left-radius: 0;
+  }
+`;
+
+const CommentAvatar = styled(Box)`
+  margin-right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6f61, #ffcccb);
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  &:hover {
+    background: linear-gradient(135deg, #ffcccb, #ff6f61);
+    transform: scale(1.1);
+  }
+`;
+
+const CommentContent = styled(Box)`
+  flex: 1;
+  font-size: 14px;
+`;
 
 const CarDetails = () => {
   const { id } = useParams();
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/users/get-comments")
+      .then((response) => setComments(response.data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  const handleCommentSubmit = () => {
+    const newCommentData = {
+      text: newComment,
+      isUser: true,
+    };
+
+    axios
+      .post("http://localhost:5000/api/users/add-comment", newCommentData)
+      .then((response) => {
+        setComments([response.data, ...comments]);
+        setNewComment("");
+      })
+      .catch((error) => console.error(error));
+  };
+
   const cars = [
     {
       id: 1,
@@ -495,6 +605,41 @@ const CarDetails = () => {
                 <DescriptionText>{car.description}</DescriptionText>
               </DescriptionSection>
             </InfoSection>
+            <CommentSection>
+              <Typography variant="h6" gutterBottom>
+                Comments
+              </Typography>
+              <CommentList>
+                {comments.map((comment, index) => (
+                  <CommentItem
+                    key={index}
+                    className={
+                      comment.isUser ? "user-comment" : "other-comment"
+                    }
+                  >
+                    <CommentAvatar>{comment.isUser ? "U" : "O"}</CommentAvatar>
+                    <CommentContent>
+                      <Typography>{comment.text}</Typography>
+                    </CommentContent>
+                  </CommentItem>
+                ))}
+              </CommentList>
+              <TextField
+                label="Add a comment"
+                variant="outlined"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCommentSubmit}
+              >
+                Add Comment
+              </Button>
+            </CommentSection>
           </CarCard>
         </Grid>
         <Grid item xs={4}>
