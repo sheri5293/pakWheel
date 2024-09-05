@@ -70,35 +70,50 @@ const CarImageSlider = styled(Slider)`
     width: 100%;
     height: 400px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition:
+      transform 0.5s ease,
+      box-shadow 0.5s ease;
+  }
+
+  .slick-slide img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   }
 
   .slick-prev,
   .slick-next {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     z-index: 1;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
+    opacity: 0.8;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
     border-radius: 50%;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid #1976d2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .slick-prev {
-    left: 10px;
+    left: 20px;
     &:before {
-      content: "‹";
-      font-size: 24px;
+      content: "◁";
+      font-size: 28px;
       color: #1976d2;
     }
   }
 
   .slick-next {
-    right: 10px;
+    right: 20px;
     &:before {
-      content: "›";
-      font-size: 24px;
+      content: "▷";
+      font-size: 28px;
       color: #1976d2;
     }
   }
@@ -106,6 +121,8 @@ const CarImageSlider = styled(Slider)`
   .slick-prev:hover,
   .slick-next:hover {
     opacity: 1;
+    transform: scale(1.2);
+    background-color: #f5f5f5;
   }
 `;
 
@@ -334,21 +351,32 @@ const CommentContent = styled(Box)`
 
 const CarDetails = () => {
   const { id } = useParams();
+
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/users/get-comments")
-      .then((response) => setComments(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+    if (!id) {
+      console.error("carId is undefined or null");
+      return;
+    }
 
+    axios
+      .get(`http://localhost:5000/api/users/get-comments/${id}`)
+      .then((response) => {
+        console.log("Response data:", response.data);
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching comments:", error);
+      });
+  }, [id]);
   const handleCommentSubmit = () => {
     const newCommentData = {
       text: newComment,
       isUser: true,
+      carId: id,
     };
 
     axios

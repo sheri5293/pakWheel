@@ -38,7 +38,7 @@ router.post("/contact-info", saveContact);
 //getCarInfo
 router.get("/get-car/:id", getCarDetail);
 
-router.get("/get-comments", getComments);
+router.get("/get-comments/:carId", getComments);
 
 router.post("/add-comment", addComment);
 

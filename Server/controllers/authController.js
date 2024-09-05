@@ -282,12 +282,19 @@ const getCarDetail = async (req, res) => {
   }
 };
 const getComments = (req, res) => {
-  Comment.getAllComments((err, results) => {
+  const carId = req.params.carId;
+
+  if (!carId) {
+    return res.status(400).json({ error: "Car ID is required" });
+  }
+
+  Comment.getCommentsByCarId(carId, (err, results) => {
     if (err) {
-      res.status(500).json({ error: "Database error" });
-    } else {
-      res.json(results);
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Database error" });
     }
+
+    res.json(results);
   });
 };
 
@@ -295,6 +302,7 @@ const addComment = (req, res) => {
   const newComment = {
     text: req.body.text,
     isUser: req.body.isUser,
+    carId: req.body.carId,
   };
 
   Comment.addComment(newComment, (err, result) => {
