@@ -11,6 +11,8 @@ import {
   uploadImage,
   saveContact,
   getCarDetail,
+  getComments,
+  addComment,
 } from "../controllers/authController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = express.Router();
@@ -35,5 +37,9 @@ router.post("/contact-info", saveContact);
 
 //getCarInfo
 router.get("/get-car/:id", getCarDetail);
+
+router.get("/get-comments/:carId", getComments);
+
+router.post("/add-comment", addComment);
 
 export default router;

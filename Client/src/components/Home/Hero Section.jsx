@@ -7,7 +7,7 @@ import { HeroSection, HeroContent, HeroButton } from "./HeroSectionStyles";
 const HeroSectionComponent = () => {
   const navigate = useNavigate();
   const handleExploreClick = () => {
-    navigate("/about");
+    navigate("/explore-cars");
   };
 
   return (

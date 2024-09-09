@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useFormLogin } from "../../hooks/useFormLogin";
 import ToastNotification from "../Common/ToastNotification";
 import Spinner from "../Common/Spinner";
+import AuthContext from "../contexts/AuthContext";
 import {
   AuthContainer,
   FormWrapper,
@@ -26,6 +27,7 @@ function LoginPage() {
   const navigate = useNavigate();
   // const { loginWithRedirect } = useAuth0();
   const { login } = useAuth();
+
   const { values, handleChange, handleSubmit, errors } = useFormLogin();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
