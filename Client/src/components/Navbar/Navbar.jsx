@@ -51,15 +51,17 @@ function Navbar() {
   }, []);
 
   const handleAuthClick = () => {
-    if (location.pathname === "/login" || location.pathname === "/signup") {
-      return;
+    if (isLoggedIn) {
+      handleLogout();
+    } else if (!isAuthPage) {
+      navigate("/login");
     }
-    navigate("/login");
   };
 
   const handleLogout = () => {
     Cookies.remove("authToken");
     Cookies.remove("authTokenExpiry");
+    setIsLoggedIn(false);
     navigate("/login");
     window.location.reload();
   };
@@ -181,17 +183,16 @@ function Navbar() {
             </IconButton>
           )}
           <Box sx={{ marginLeft: "auto", display: "flex", gap: 1 }}>
-            <IconButton
-              onClick={handleAuthClick}
-              sx={{ color: "white" }}
-              disabled={isAuthPage}
-            >
-              <PersonIcon />
-            </IconButton>
-            {isLoggedIn && !isAuthPage && (
+            {isLoggedIn ? (
               <IconButton onClick={handleLogout} sx={{ color: "white" }}>
                 <LogoutIcon />
               </IconButton>
+            ) : (
+              !isAuthPage && (
+                <IconButton onClick={handleAuthClick} sx={{ color: "white" }}>
+                  <PersonIcon />
+                </IconButton>
+              )
             )}
           </Box>
         </Toolbar>

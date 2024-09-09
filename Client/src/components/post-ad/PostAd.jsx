@@ -1,10 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
 import CarInfoModal from "../Modal/CarInfoModal";
 import UploadModal from "../Modal/uploadModal";
 import ContactModal from "../Modal/ContactModal";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
 import {
   Wrapper,
   SubHeading,
@@ -21,6 +24,15 @@ import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import PublishedAdLayout from "./PublishedAdLayout";
 
 const PostAd = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authToken = Cookies.get("authToken");
+    if (!authToken) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const [cardStatus, setCardStatus] = useState({
@@ -151,7 +163,7 @@ const PostAd = () => {
           open={modalOpen}
           handleClose={handleCloseModal}
           onSuccess={() => handleSuccess("photos")}
-          carId={carId || "51"}
+          carId={carId || "84"}
         />
       )}
       {modalOpen && activeCard === "contact" && (
@@ -159,7 +171,7 @@ const PostAd = () => {
           open={modalOpen}
           handleClose={handleCloseModal}
           onSuccess={() => handleSuccess("contact")}
-          carId={carId || "51"}
+          carId={carId || "84"}
         />
       )}
 

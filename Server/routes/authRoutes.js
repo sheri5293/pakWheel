@@ -10,7 +10,7 @@ import {
   upload,
   uploadImage,
   saveContact,
-  getCarDetails,
+  getCarDetail,
 } from "../controllers/authController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = express.Router();
@@ -23,11 +23,17 @@ router.get("/google/callback", googleCallback);
 router.get("/services", authMiddleware, (req, res) => {
   res.json({ message: "This is a protected route" });
 });
+
+router.get("/post-ad", authMiddleware, (req, res) => {
+  res.json({ message: "This is a protected route" });
+});
+
 router.post("/submit-car-info", submitCarInfo);
 router.post("/upload-images", upload.single("image"), uploadImage);
+
 router.post("/contact-info", saveContact);
 
 //getCarInfo
-router.get("/get-car", getCarDetails);
+router.get("/get-car/:id", getCarDetail);
 
 export default router;

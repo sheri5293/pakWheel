@@ -128,7 +128,6 @@ const submitCarInfo = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadsDir = path.join(__dirname, "uploads");
@@ -261,6 +260,26 @@ const getCarDetails = async (req, res) => {
   }
 };
 
+const getCarDetail = async (req, res) => {
+  const carId = req.params.id;
+
+  const carQuery = "SELECT * FROM car_info WHERE id = ?";
+
+  try {
+    const [carResults] = await db.query(carQuery, [carId]);
+    if (carResults.length === 0) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+
+    res.status(200).json({
+      carInfo: carResults[0],
+    });
+  } catch (err) {
+    console.error("Error fetching car details:", err);
+    res.status(500).json({ message: "Database error" });
+  }
+};
+
 export {
   login,
   signup,
@@ -270,5 +289,5 @@ export {
   uploadImage,
   upload,
   saveContact,
-  getCarDetails,
+  getCarDetail,
 };

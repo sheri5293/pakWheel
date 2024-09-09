@@ -43,7 +43,7 @@ const UploadModal = ({ open, handleClose, carId, onSuccess }) => {
     console.log("Submitting with carId:", carId);
 
     const formData = new FormData();
-    formData.append("car_id", String(carId)); // Ensure carId is a string
+    formData.append("car_id", String(carId));
     formData.append("image", event.target.image.files[0]);
 
     try {
