@@ -24,6 +24,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "../../redux/store";
 import Filters from "../post-ad/Filters";
@@ -154,7 +155,7 @@ const carAds = [
     image:
       "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
     city: "Lahore",
-    carInfo: "Honda Civic",
+    carInfo: "Nissan Altima 2019",
     mileage: "45,000 km",
     registeredIn: "Punjab",
     color: "Black",
@@ -168,7 +169,7 @@ const carAds = [
     image:
       "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
     city: "Lahore",
-    carInfo: "Honda Civic",
+    carInfo: "Audi A6",
     mileage: "45,000 km",
     registeredIn: "Punjab",
     color: "Black",
@@ -182,7 +183,7 @@ const carAds = [
     image:
       "https://img.goodfon.com/original/1280x960/6/f5/audi-chernyy-kontur.jpg",
     city: "Lahore",
-    carInfo: "Honda Civic",
+    carInfo: "Cultus",
     mileage: "45,000 km",
     registeredIn: "Punjab",
     color: "Black",
@@ -300,13 +301,18 @@ const ExploreCars = () => {
                           </IconButton>
                         </EditDeleteContainer>
                         <DetailsContainer>
-                          <Typography
-                            component="h5"
-                            variant="h6"
-                            sx={{ fontWeight: 600, fontSize: "1.5rem" }}
+                          <Link
+                            to={`/car-details/${ad.id}`}
+                            style={{ textDecoration: "none" }}
                           >
-                            {ad.carInfo}
-                          </Typography>
+                            <Typography
+                              component="h5"
+                              variant="h6"
+                              sx={{ fontWeight: 600, fontSize: "1.5rem" }}
+                            >
+                              {ad.carInfo}
+                            </Typography>
+                          </Link>
                           <Typography
                             variant="body2"
                             color="textSecondary"

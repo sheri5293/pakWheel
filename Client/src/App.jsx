@@ -8,12 +8,14 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
+
 import Services from "./pages/Services";
 import AdPostCard from "./components/post-ad/PostAd";
 import axios from "./services/api";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import ExploreCars from "./components/exploreCars/exploreCars";
+import CarDetails from "./components/exploreCars/CarDetails";
 
 function App() {
   const [isTokenValid, setIsTokenValid] = useState(true);
@@ -52,6 +54,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/post-ad" element={<AdPostCard />} />
         <Route path="/explore-cars" element={<ExploreCars />} />
+        <Route path="/car-details/:id" element={<CarDetails />} />
       </Routes>
       <ToastContainer />
     </Router>
